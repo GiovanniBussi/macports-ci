@@ -1,0 +1,171 @@
+#! /bin/bash
+
+MACPORTS_VERSION=2.4.1
+MACPORTS_PREFIX=/opt/local
+MACPORTS_SYNC=tarball
+
+action=$1
+shift
+
+case "$action" in
+(install)
+
+echo "macports-ci: install"
+
+for opt
+do
+  case "$opt" in
+  (--source) SOURCE=yes ;;
+  (--binary) SOURCE=no ;;
+  (--version=*) MACPORTS_VERSION="${opt#--version=}" ;;
+  (--prefix=*)  MACPORTS_PREFIX="${opt#--prefix=}" ;;
+  (--sync=*)    MACPORTS_SYNC="${opt#--sync=}" ;;
+  (*) echo "macports-ci: unknown option $opt"
+      exit 1 ;;
+  esac
+done
+
+echo "macports-ci: prefix=$MACPORTS_PREFIX"
+
+if test "$MACPORTS_PREFIX" != /opt/local ; then
+  echo "macports-ci: Installing on non standard prefix $MACPORTS_PREFIX can be only made from sources"
+  SOURCE=yes
+fi
+
+if test "$SOURCE" = yes ; then
+  echo "macports-ci: Installing from source"
+else
+  echo "macports-ci: Installing from binary"
+fi
+
+echo "macports-ci: Sync mode=$MACPORTS_SYNC"
+
+pushd "$(mktemp -d)"
+
+OSX_VERSION="$(sw_vers -productVersion | sed 's/\.[^\.]*$//')"
+
+if test "$OSX_VERSION" == 10.10 ; then
+  OSX_NAME=Yosemite
+elif test "$OSX_VERSION" == 10.11 ; then
+  OSX_NAME=ElCapitan
+elif test "$OSX_VERSION" == 10.12 ; then
+  OSX_NAME=Sierra
+else
+  echo "macports-ci: Unknown OSX version $OSX_VERSION"
+  exit 1
+fi
+
+echo "macports-ci: OSX version $OSX_VERSION $OSX_NAME"
+
+MACPORTS_PKG=MacPorts-${MACPORTS_VERSION}-${OSX_VERSION}-${OSX_NAME}.pkg
+
+URL="https://distfiles.macports.org/MacPorts"
+URL="https://github.com/macports/macports-base/releases/download/v$MACPORTS_VERSION/"
+
+echo "macports-ci: Base URL is $URL"
+
+if test "$SOURCE" = yes ; then
+# download source:
+  wget $URL/MacPorts-${MACPORTS_VERSION}.tar.bz2
+  tar xjf MacPorts-${MACPORTS_VERSION}.tar.bz2
+  cd MacPorts-${MACPORTS_VERSION}
+# install
+  ./configure --prefix="$MACPORTS_PREFIX" --with-applications-dir="$MACPORTS_PREFIX/Applications" >/dev/null &&
+    sudo make install >/dev/null
+else
+# download installer:
+  wget $URL/$MACPORTS_PKG
+# install:
+  sudo installer -pkg $MACPORTS_PKG -target /
+fi
+
+# update:
+export PATH="$MACPORTS_PREFIX/bin:$PATH"
+
+SOURCES="${MACPORTS_PREFIX}"/etc/macports/sources.conf
+
+case "$MACPORTS_SYNC" in
+(rsync)
+  echo "Using rsync"
+  ;;
+(github)
+  echo "Using github"
+   pushd "$MACPORTS_PREFIX"/var/macports/sources
+   sudo mkdir -p github.com/macports/macports-ports/
+   sudo chown -R $USER:admin github.com
+   git clone https://github.com/macports/macports-ports.git github.com/macports/macports-ports/
+   awk '{if($NF=="[default]") print "file:///opt/local/var/macports/sources/github.com/macports/macports-ports/"; else print}' "$SOURCES" > $HOME/$$.tmp
+   sudo mv -f $HOME/$$.tmp "$SOURCES"
+   popd
+  ;;
+(tarball)
+  echo "Using tarball (default)"
+  awk '{if($NF=="[default]") print "https://distfiles.macports.org/ports.tar.gz [default]"; else print}' "$SOURCES" > $$.tmp
+  sudo mv -f $$.tmp "$SOURCES"
+  ;;
+(*)
+  echo "Unknown sync mode $MACPORTS_SYNC"
+  ;;
+esac
+
+i=0
+# run through a while to retry upon failure
+while true
+do
+  sudo port -N selfupdate && break || true
+  sleep 5
+  i=$((i+1))
+  if ((i>10)) ; then
+    break
+  fi
+done
+
+
+dir="$PWD"
+popd
+sudo rm -fr $dir
+
+;;
+
+(localports)
+
+echo "macports-ci: localports"
+
+for opt
+do
+  case "$opt" in
+  (*) ports="$opt" ;;
+  esac
+done
+
+if ! test -d "$ports" ; then
+  echo "Please provide a port directory"
+  exit 1
+fi
+
+w=$(which port)
+
+MACPORTS_PREFIX="${w%/bin/port}"
+
+cd "$ports"
+
+ports="$(pwd)"
+
+echo "Portdir fullpath: $ports"
+SOURCES="${MACPORTS_PREFIX}"/etc/macports/sources.conf
+
+awk -v repo="file://$ports" '{if($NF=="[default]") print repo; print}' "$SOURCES" > $$.tmp
+sudo mv -f $$.tmp "$SOURCES"
+
+portindex
+
+;;
+
+(*)
+echo "unknown action $action"
+
+esac
+
+
+
+
