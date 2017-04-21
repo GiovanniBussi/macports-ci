@@ -9,6 +9,8 @@ you should install it on the fly everytime.
 For a few projects I am working on I copied around scripts installing MacPorts. I now decided to share here a generic script called `macports-ci` that could be used in multiple projects.
 The script is checked frequently on [Travis-ci](https://travis-ci.org/GiovanniBussi/macports-ci),
 so you should be able to see from the status image above whether it is working or not.
+I recommend using `wget` as explained below to always use the latest version from the `master` branch.
+In case I have to test some feature, I will do it on separate branches so as to keep `master` branch stable.
 
 Installing MacPorts
 -------------------
@@ -62,6 +64,14 @@ you are done. If you want to also setup a
 After this command, you will be able to install packages described in your local Portfiles using commands such as `port install portname`.
 Notice that local Portfiles will take the precedence with respect to official Portfiles.
 
+Real life usage
+---------------
+
+You can find some sample usage in the `.travis.yml` files of these repositories:
+
+- [plumed/plumed2](http://github.com/plumed/plumed2)
+- [plumed/ports](http://github.com/plumed/ports)
+
 Feedbacks
 ---------
 
@@ -78,3 +88,4 @@ There are a few additional improvements that could be implemented:
 - Making the `port sync` procedure used within `./macports-ci install` more robust. I occasionally find problems with MacPorts mirrors. The current choice (sync from tarball) seems the most robust, but perhaps the could be improved trying multiple approaches until one of them works.
 - Allow users to cache the `/opt/local` directory. This could be made by giving to `./macports-ci install` the path to a [cached directory](https://docs.travis-ci.com/user/caching) that could be used to restore the tree. `./macports-ci install` could then use `tar cjf $cachedir/macports.tbz2 $MACPORTS_PREFIX`. I should first check whether the `/opt/local` directory is small enough for this procedure to give some benefit.
 - Make use of `sudo` command optional. Inside `./macports-ci`, need of `sudo` could be detected trying to touch a file in the prefix path.
+
