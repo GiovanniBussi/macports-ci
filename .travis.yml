@@ -4,21 +4,26 @@ matrix:
   include:
 # test all images installing in default location
   - osx_image: xcode7.3
+    env: OPT=--sync=rsync
   - osx_image: xcode8
+    env: OPT=--sync=rsync
   - osx_image: xcode8.1
+    env: OPT=--sync=rsync
   - osx_image: xcode8.2
+    env: OPT=--sync=rsync
   - osx_image: xcode8.3
+    env: OPT=--sync=rsync
 # test all images installing in $HOME/opt
   - osx_image: xcode7.3
-    env: PRE=$HOME/opt
+    env: PRE=$HOME/opt OPT=--sync=rsync
   - osx_image: xcode8
-    env: PRE=$HOME/opt
+    env: PRE=$HOME/opt OPT=--sync=rsync
   - osx_image: xcode8.1
-    env: PRE=$HOME/opt
+    env: PRE=$HOME/opt OPT=--sync=rsync
   - osx_image: xcode8.2
-    env: PRE=$HOME/opt
+    env: PRE=$HOME/opt OPT=--sync=rsync
   - osx_image: xcode8.3
-    env: PRE=$HOME/opt
+    env: PRE=$HOME/opt OPT=--sync=rsync
 # test latest image in default location with a different sync mode
   - osx_image: xcode8.3
     env: OPT=--sync=rsync
