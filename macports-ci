@@ -112,14 +112,17 @@ i=0
 # run through a while to retry upon failure
 while true
 do
-  sudo port -N selfupdate && break || true
+  echo "Trying to selfupdate (iteration $i)"
+  sudo port -N selfupdate && port info xdrfile && break || true
   sleep 5
   i=$((i+1))
-  if ((i>10)) ; then
-    break
+  if ((i>20)) ; then
+    echo "Failed after $i iterations"
+    exit 1
   fi
 done
 
+echo "Selfupdate was successful"
 
 dir="$PWD"
 popd
