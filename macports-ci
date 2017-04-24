@@ -64,6 +64,16 @@ URL="https://github.com/macports/macports-base/releases/download/v$MACPORTS_VERS
 
 echo "macports-ci: Base URL is $URL"
 
+CACHE_TBZ2="$HOME/macports-ci-cache/ports-${OSX_VERSION}-${MACPORTS_VERSION}-${MACPORTS_PREFIX////_}.tbz2"
+
+if test -f "${CACHE_TBZ2}" ; then
+
+pushd /
+sudo tar xjf "$CACHE_TBZ2"
+popd
+
+else
+
 if test "$SOURCE" = yes ; then
 # download source:
   wget $URL/MacPorts-${MACPORTS_VERSION}.tar.bz2
@@ -77,6 +87,13 @@ else
   wget $URL/$MACPORTS_PKG
 # install:
   sudo installer -pkg $MACPORTS_PKG -target /
+fi
+
+pushd /
+sudo tar cjf "$CACHE_TBZ2" opt/local
+popd
+ls -ltr "CACHE_TBZ2"
+
 fi
 
 # update:
