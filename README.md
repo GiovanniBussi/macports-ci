@@ -39,14 +39,14 @@ The `./macports-ci install` script can be run with a few options:
          Require a specific MacPorts version. Notice that
          MacPorts is anyway updated with a `selfupdate` command.
      --sync=rsync
-         Specify sync mode. Mode can be either `tarball` (default),
-         `rsync`, or `github`.
+         Specify sync mode. Mode can be either `rsync` (default),
+         `tarball`, or `github`.
  
  Notice that the `./macports-ci install` script will take care of a number of things, including:
  
  - Finding which version of OSX you have so as to identify the correct MacPorts image
    when using binary installation from pkg.
- - Fixing the configuration file so as to make `port selfupdate` more reliable on Travis-ci (current default: `tarball`).
+ - Trying to use `port selfupdate` multiple times until it succeeds.
  
 **It will not fix your executation path**, which should be adjusted by hand with `PATH="/opt/local/bin:$PATH"`
      
@@ -85,7 +85,6 @@ Todo
 
 There are a few additional improvements that could be implemented:
 
-- Making the `port sync` procedure used within `./macports-ci install` more robust. I occasionally find problems with MacPorts mirrors. The current choice (sync from tarball) seems the most robust, but perhaps the could be improved trying multiple approaches until one of them works.
 - Allow users to cache the `/opt/local` directory. This could be made by giving to `./macports-ci install` the path to a [cached directory](https://docs.travis-ci.com/user/caching) that could be used to restore the tree. `./macports-ci install` could then use `tar cjf $cachedir/macports.tbz2 $MACPORTS_PREFIX`. I should first check whether the `/opt/local` directory is small enough for this procedure to give some benefit.
 - Make use of `sudo` command optional. Inside `./macports-ci`, need of `sudo` could be detected trying to touch a file in the prefix path.
 

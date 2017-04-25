@@ -2,7 +2,7 @@
 
 MACPORTS_VERSION=2.4.1
 MACPORTS_PREFIX=/opt/local
-MACPORTS_SYNC=tarball
+MACPORTS_SYNC=rsync
 
 action=$1
 shift
@@ -99,7 +99,7 @@ case "$MACPORTS_SYNC" in
    popd
   ;;
 (tarball)
-  echo "Using tarball (default)"
+  echo "Using tarball"
   awk '{if($NF=="[default]") print "https://distfiles.macports.org/ports.tar.gz [default]"; else print}' "$SOURCES" > $$.tmp
   sudo mv -f $$.tmp "$SOURCES"
   ;;
@@ -108,18 +108,25 @@ case "$MACPORTS_SYNC" in
   ;;
 esac
 
-i=0
+i=1
 # run through a while to retry upon failure
 while true
 do
-  sudo port -N selfupdate && break || true
+  echo "Trying to selfupdate (iteration $i)"
+# here I test for the presence of a known portfile
+# this check confirms that ports were installed
+# notice that port -N selfupdate && break is not sufficient as a test
+# (sometime it returns a success even though ports have not been installed)
+  sudo port -N selfupdate && port info xdrfile > /dev/null && break || true
   sleep 5
   i=$((i+1))
-  if ((i>10)) ; then
-    break
+  if ((i>20)) ; then
+    echo "Failed after $i iterations"
+    exit 1
   fi
 done
 
+echo "Selfupdate successful after $i iterations"
 
 dir="$PWD"
 popd
