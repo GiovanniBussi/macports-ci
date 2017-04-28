@@ -21,9 +21,9 @@ matrix:
     env: PRE=$HOME/opt
 # test latest image with a different sync mode
   - osx_image: xcode8.3
-    env: OPT=--sync=tarball
+    env: OPT=--sync=rsync
   - osx_image: xcode8.3
-    env: PRE=$HOME/opt OPT=--sync=tarball
+    env: PRE=$HOME/opt OPT=--sync=rsync
 
 script:
 # this is required for curl to work correctly:
