@@ -39,8 +39,8 @@ The `./macports-ci install` script can be run with a few options:
          Require a specific MacPorts version. Notice that
          MacPorts is anyway updated with a `selfupdate` command.
      --sync=rsync
-         Specify sync mode. Mode can be either `rsync` (default),
-         `tarball`, or `github`.
+         Specify sync mode. Mode can be either `rsync`,
+         `tarball` (default), or `github`.
  
  Notice that the `./macports-ci install` script will take care of a number of things, including:
  

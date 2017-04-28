@@ -2,7 +2,7 @@
 
 MACPORTS_VERSION=2.4.1
 MACPORTS_PREFIX=/opt/local
-MACPORTS_SYNC=rsync
+MACPORTS_SYNC=tarball
 
 action=$1
 shift
