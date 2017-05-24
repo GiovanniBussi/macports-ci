@@ -64,6 +64,17 @@ you are done. If you want to also setup a
 After this command, you will be able to install packages described in your local Portfiles using commands such as `port install portname`.
 Notice that local Portfiles will take the precedence with respect to official Portfiles.
 
+Enabling ccache
+---------------
+
+In case you want to enable ccache, you should add the following command after you installed MacPorts.
+
+    - ./macports-ci ccache
+
+This will install ccache and make sure that it is used for compiling further packages.
+Notice that in addition to this you should add `cache: ccache` at the beginning of your `travis.yml`
+file so that the ccache cache is save. See also [this page](https://docs.travis-ci.com/user/caching/).
+
 Real life usage
 ---------------
 
