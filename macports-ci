@@ -168,6 +168,20 @@ portindex
 
 ;;
 
+(ccache)
+
+echo "macports-ci: localports"
+
+CONF="${MACPORTS_PREFIX}"/etc/macports/macports.conf
+awk '{if(match($0,"configureccache")) print "configureccache yes" ; else print }' "$CONF" > $$.tmp
+sudo mv -f $$.tmp "$CONF"
+
+echo "***"
+cat  "${CONF}"
+echo "***"
+
+;;
+
 (*)
 echo "macports-ci: unknown action $action"
 
