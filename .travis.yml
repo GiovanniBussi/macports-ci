@@ -30,8 +30,8 @@ script:
   - export COLUMNS=80
   - if test -z "$PRE" ; then PRE=/opt/local ; fi
   - ./macports-ci install --prefix="$PRE" $OPT
-  - ./macports-ci ccache
   - PATH="$PRE/bin:$PATH"
+  - ./macports-ci ccache
   - which port
 # install a small port for test:
   - sudo port -N install xdrfile
