@@ -176,9 +176,7 @@ CONF="${MACPORTS_PREFIX}"/etc/macports/macports.conf
 awk '{if(match($0,"configureccache")) print "configureccache yes" ; else print }' "$CONF" > $$.tmp
 sudo mv -f $$.tmp "$CONF"
 
-echo "***"
-cat  "${CONF}"
-echo "***"
+sudo port install ccache
 
 ;;
 
