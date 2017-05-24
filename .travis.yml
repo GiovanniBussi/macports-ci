@@ -1,5 +1,7 @@
 language: objective-c
 
+cache: ccache
+
 matrix:
   include:
 # test all images installing in default location
