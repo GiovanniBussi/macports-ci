@@ -170,13 +170,17 @@ portindex
 
 (ccache)
 
-echo "macports-ci: localports"
+echo "macports-ci: ccache"
 
 CONF="${MACPORTS_PREFIX}"/etc/macports/macports.conf
 awk '{if(match($0,"configureccache")) print "configureccache yes" ; else print }' "$CONF" > $$.tmp
 sudo mv -f $$.tmp "$CONF"
 
-sudo port install ccache
+echo "** debug **"
+grep configureccache "$CONF"
+echo "** end debug **"
+
+sudo port -N install ccache
 
 ;;
 
