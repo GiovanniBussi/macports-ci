@@ -43,3 +43,5 @@ script:
   - ./macports-ci localports test_portfiles
 # install a small local port for test:
   - sudo port -N install xdrfile1
+# check if ccache had some hit
+  - ccache -s
