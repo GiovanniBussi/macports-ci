@@ -180,10 +180,14 @@ awk '{if(match($0,"configureccache")) print "configureccache yes" ; else print }
 sudo mv -f $$.tmp "$CONF"
 
 echo "** debug **"
+echo "w=$w"
+echo "MACPORTS_PREFIX=$MACPORTS_PREFIX"
 grep configureccache "$CONF"
 echo "** end debug **"
 
 sudo port -N install ccache
+
+ccache -s
 
 ;;
 
