@@ -172,22 +172,17 @@ portindex
 
 echo "macports-ci: ccache"
 
-w=$(which port)
-MACPORTS_PREFIX="${w%/bin/port}"
-
-CONF="${MACPORTS_PREFIX}"/etc/macports/macports.conf
-awk '{if(match($0,"configureccache")) print "configureccache yes" ; else print }' "$CONF" > $$.tmp
-sudo mv -f $$.tmp "$CONF"
-
-echo "** debug **"
-echo "w=$w"
-echo "MACPORTS_PREFIX=$MACPORTS_PREFIX"
-grep configureccache "$CONF"
-echo "** end debug **"
-
+# first install ccache
 sudo port -N install ccache
 
 ccache -s
+
+# then tell macports to use it
+w=$(which port)
+MACPORTS_PREFIX="${w%/bin/port}"
+CONF="${MACPORTS_PREFIX}"/etc/macports/macports.conf
+awk '{if(match($0,"configureccache")) print "configureccache yes" ; else print }' "$CONF" > $$.tmp
+sudo mv -f $$.tmp "$CONF"
 
 ;;
 
