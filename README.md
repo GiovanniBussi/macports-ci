@@ -48,7 +48,10 @@ The `./macports-ci install` script can be run with a few options:
    when using binary installation from pkg.
  - Trying to use `port selfupdate` multiple times until it succeeds.
  
-**It will not fix your executation path**, which should be adjusted by hand with `PATH="/opt/local/bin:$PATH"`
+**It will not fix your executation path**, which should be adjusted by hand with `PATH="/opt/local/bin:$PATH"`.
+Notice that the commands discussed below rely on `port` to be in the execution path to find its prefix,
+so it is a good idea to adjust the path
+just after `./macports-ci install` as in the example above.
      
       
 
@@ -72,8 +75,16 @@ In case you want to enable ccache, you should add the following command after yo
     - ./macports-ci ccache
 
 This will install ccache and make sure that it is used for compiling further packages.
-Notice that in addition to this you should add `cache: ccache` at the beginning of your `travis.yml`
-file so that the ccache cache is save. See also [this page](https://docs.travis-ci.com/user/caching/).
+Notice that in addition to this you should tell Travis-ci to save your ccache cache.
+According to [this page](https://docs.travis-ci.com/user/caching/) it should be sufficient to add
+`cache: ccache` at the beginning of your `.travis.yml`. However, in practice I found necessary to
+explicitly declare the `$HOME/.ccache` directory as cached by adding
+
+    cache:
+      directories:
+    - $HOME/.ccache
+
+at the beginning of the `.travis.yml` file.
 
 Real life usage
 ---------------
