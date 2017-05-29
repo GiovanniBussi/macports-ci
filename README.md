@@ -70,21 +70,30 @@ Notice that local Portfiles will take the precedence with respect to official Po
 Enabling ccache
 ---------------
 
-In case you want to enable ccache, you should add the following command after you installed MacPorts.
+Ccache could be used to significantly speed up your builds, especially if you build similar source multiple times. However, notice that it will add an initial slowdown to install ccache itself. This would be more significant if you install on a non-default prefix, such that ccache itself (and its required libraries) are installed from source. This, using ccache is not recommended when building on non-default prefix.
+
+In case you want to enable ccache to be available to `port install` commands, you should modify your `.travis.yml` file following these instructions. First, add the following command at the beginning of the configuration file
+
+````
+cache:
+  directories:
+  - $HOME/.macports-ci-ccache
+````    
+
+This will inform Travis-ci that there is a directory to be cached. Then, add the following command after you installed MacPorts and before executing `port install` commands:
 
     - ./macports-ci ccache
 
-This will install ccache and make sure that it is used for compiling further packages.
-Notice that in addition to this you should tell Travis-ci to save your ccache cache.
-According to [this page](https://docs.travis-ci.com/user/caching/) it should be sufficient to add
-`cache: ccache` at the beginning of your `.travis.yml`. However, in practice I found necessary to
-explicitly declare the `$HOME/.ccache` directory as cached by adding
+This will install ccache, retrieve the cache, and make sure ccache is used for compiling further packages. 
+Finally, add the following command after you executed the relevant `port install` commands:
 
-    cache:
-      directories:
-    - $HOME/.ccache
+    - ./macports-ci ccache --save
 
-at the beginning of the `.travis.yml` file.
+This will store the ccache cache in a place where it can be seen by Travis-ci. 
+
+Notice that caching the `$HOME/.ccache` directory as explained in 
+[this page](https://docs.travis-ci.com/user/caching/) is not required nor sufficient.
+
 
 Real life usage
 ---------------
@@ -109,4 +118,5 @@ There are a few additional improvements that could be implemented:
 
 - Allow users to cache the `/opt/local` directory. This could be made by giving to `./macports-ci install` the path to a [cached directory](https://docs.travis-ci.com/user/caching) that could be used to restore the tree. `./macports-ci install` could then use `tar cjf $cachedir/macports.tbz2 $MACPORTS_PREFIX`. I should first check whether the `/opt/local` directory is small enough for this procedure to give some benefit.
 - Make use of `sudo` command optional. Inside `./macports-ci`, need of `sudo` could be detected trying to touch a file in the prefix path.
+- Personalize ccache, e.g. allowing the user to specify cache size.
 
