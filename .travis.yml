@@ -1,6 +1,8 @@
 language: objective-c
 
-cache: ccache
+cache:
+  directories:
+  - $HOME/.macports-ci-ccache
 
 matrix:
   include:

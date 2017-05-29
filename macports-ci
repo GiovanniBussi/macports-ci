@@ -196,15 +196,18 @@ CONF="${MACPORTS_PREFIX}"/etc/macports/macports.conf
 awk '{if(match($0,"configureccache")) print "configureccache yes" ; else print }' "$CONF" > $$.tmp
 sudo mv -f $$.tmp "$CONF"
 
-mkdir -p "$HOME"/.ccache
-sudo mkdir -p "$MACPORTS_PREFIX"/var/macports/build/.ccache
-test -f "$HOME"/.ccache/* && sudo cp -a "$HOME"/.ccache/* "$MACPORTS_PREFIX"/var/macports/build/.ccache/
-sudo chown -R macports:admin "$MACPORTS_PREFIX"/var/macports/build/.ccache
+test -f "$HOME"/.macports-ci-ccache/* &&
+  sudo rm -fr "$MACPORTS_PREFIX"/var/macports/build/.ccache &&
+  sudo mkdir -p "$MACPORTS_PREFIX"/var/macports/build/.ccache &&
+  sudo cp -a "$HOME"/.macports-ci-ccache/* "$MACPORTS_PREFIX"/var/macports/build/.ccache/ &&
+  sudo chown -R macports:admin "$MACPORTS_PREFIX"/var/macports/build/.ccache
 
 ;;
 (save)
 
-sudo cp -a "$MACPORTS_PREFIX"/var/macports/build/.ccache/* "$HOME"/.ccache/
+sudo rm -fr "$HOME"/.macports-ci-ccache
+sudo mkdir -p "$HOME"/.macports-ci-ccache
+sudo cp -a "$MACPORTS_PREFIX"/var/macports/build/.ccache/* "$HOME"/.macports-ci-ccache/
 
 esac
 
