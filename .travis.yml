@@ -35,7 +35,7 @@ script:
   - if test -z "$PRE" ; then PRE=/opt/local ; fi
   - ./macports-ci install --prefix="$PRE" $OPT
   - PATH="$PRE/bin:$PATH"
-  - ./macports-ci ccache
+  - if test "$PRE" = /opt/local ; then ./macports-ci ccache ; fi
   - which port
 # install a small port for test:
   - sudo port -N install xdrfile
@@ -44,4 +44,4 @@ script:
 # install a small local port for test:
   - sudo port -N install xdrfile1
 # save ccache
-  - ./macports-ci ccache --save
+  - if test "$PRE" = /opt/local ; then ./macports-ci ccache --save ; fi
