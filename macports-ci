@@ -100,7 +100,10 @@ case "$MACPORTS_SYNC" in
   ;;
 (tarball)
   echo "macports-ci: Using tarball"
-  awk '{if($NF=="[default]") print "https://distfiles.macports.org/ports.tar.gz [default]"; else print}' "$SOURCES" > $$.tmp
+MACPORTS_TARBALL="https://distfiles.macports.org/ports.tar.gz"
+# for some reason https does not work correctly here when running from some repositories
+MACPORTS_TARBALL="http://distfiles.macports.org/ports.tar.gz"
+  awk '{if($NF=="[default]") print "'$MACPORTS_TARBALL' [default]"; else print}' "$SOURCES" > $$.tmp
   sudo mv -f $$.tmp "$SOURCES"
   ;;
 (*)
