@@ -33,6 +33,7 @@ script:
 # this is required for curl to work correctly:
   - export COLUMNS=80
   - if test -z "$PRE" ; then PRE=/opt/local ; fi
+  - echo "#### TEST ENV ####" ; env ; echo "#### END TEST ENV ####"
   - ./macports-ci install --prefix="$PRE" $OPT
   - PATH="$PRE/bin:$PATH"
   - if test "$PRE" = /opt/local ; then ./macports-ci ccache ; fi
