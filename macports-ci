@@ -66,7 +66,7 @@ echo "macports-ci: Base URL is $URL"
 
 if test "$SOURCE" = yes ; then
 # download source:
-  wget $URL/MacPorts-${MACPORTS_VERSION}.tar.bz2
+  curl -LO $URL/MacPorts-${MACPORTS_VERSION}.tar.bz2
   tar xjf MacPorts-${MACPORTS_VERSION}.tar.bz2
   cd MacPorts-${MACPORTS_VERSION}
 # install
@@ -74,7 +74,7 @@ if test "$SOURCE" = yes ; then
     sudo make install >/dev/null
 else
 # download installer:
-  wget $URL/$MACPORTS_PKG
+  curl -LO $URL/$MACPORTS_PKG
 # install:
   sudo installer -pkg $MACPORTS_PKG -target /
 fi
