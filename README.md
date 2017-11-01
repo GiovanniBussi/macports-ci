@@ -9,7 +9,7 @@ you should install it on the fly everytime.
 For a few projects I am working on I copied around scripts installing MacPorts. I now decided to share here a generic script called `macports-ci` that could be used in multiple projects.
 The script is checked frequently on [Travis-ci](https://travis-ci.org/GiovanniBussi/macports-ci),
 so you should be able to see from the status image above whether it is working or not.
-I recommend using `curl -O` as explained below to always use the latest version from the `master` branch.
+I recommend using `curl -LO` as explained below to always use the latest version from the `master` branch.
 In case I have to test some feature, I will do it on separate branches so as to keep `master` branch stable.
 
 Installing MacPorts
@@ -18,12 +18,12 @@ Installing MacPorts
 Put the following commands in your `.travis.yml` file:
 
      - export COLUMNS=80
-     - curl -O https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
+     - curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
      - chmod +x ./macports-ci
      - ./macports-ci install
      - PATH="/opt/local/bin:$PATH"
 
-If you prefer, you can directly include the `./macports-ci` file in your github repository. However, I recommend always using `curl -O` to obtain
+If you prefer, you can directly include the `./macports-ci` file in your github repository. However, I recommend always using `curl -LO` to obtain
 the latest version. Setting the number of columns with `export COLUMNS=80` is required for MacPorts to be able to download some distfiles.
 
 The `./macports-ci install` script can be run with a few options:
