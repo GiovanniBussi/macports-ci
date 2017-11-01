@@ -41,9 +41,14 @@ The `./macports-ci install` script can be run with a few options:
      --sync=rsync
          Specify sync mode. Mode can be either `rsync`,
          `tarball` (default), or `github`.
+     --keep-brew
+         Do not uninstall homebrew (currently this is the default)
+     --remove-brew
+         Uninstall homebrew (experimental)
  
  Notice that the `./macports-ci install` script will take care of a number of things, including:
  
+ - Uninstall HomeBrew (unless `--keep-brew` option is used).
  - Finding which version of OSX you have so as to identify the correct MacPorts image
    when using binary installation from pkg.
  - Trying to use `port selfupdate` multiple times until it succeeds.
