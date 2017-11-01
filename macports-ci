@@ -12,6 +12,9 @@ case "$action" in
 
 echo "macports-ci: install"
 
+echo "macports-ci: removing homebrew"
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"
+
 for opt
 do
   case "$opt" in
