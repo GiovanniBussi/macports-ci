@@ -13,7 +13,12 @@ case "$action" in
 echo "macports-ci: install"
 
 echo "macports-ci: removing homebrew"
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"
+
+pushd "$(mktemp -d)"
+curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall > uninstall
+chmod +x uninstall
+./uninstall --force
+popd
 
 for opt
 do
