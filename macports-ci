@@ -36,6 +36,8 @@ if test "$KEEP_BREW" = no ; then
   chmod +x uninstall
   ./uninstall --force
   popd
+else
+  echo "macports-ci: Keeping HomeBrew - not recommended!!"
 fi
 
 echo "macports-ci: prefix=$MACPORTS_PREFIX"
