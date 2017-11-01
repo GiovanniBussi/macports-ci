@@ -3,7 +3,7 @@
 # Travis-CI MacPorts
 
 [Travis-ci](https://travis-ci.org) is great and allows you to test your [GitHub](https://github.com) projects on OSX.
-However, OSX images on Travis-ci only come with Homebrew installed.
+However, OSX images on Travis-ci only come with HomeBrew installed.
 If, like me, you want to use [MacPorts](https://www.macports.org/),
 you should install it on the fly everytime.
 For a few projects I am working on I copied around scripts installing MacPorts. I now decided to share here a generic script called `macports-ci` that could be used in multiple projects.
@@ -41,9 +41,14 @@ The `./macports-ci install` script can be run with a few options:
      --sync=rsync
          Specify sync mode. Mode can be either `rsync`,
          `tarball` (default), or `github`.
+     --keep-brew
+         Do not uninstall HomeBrew (currently this is the default)
+     --remove-brew
+         Uninstall HomeBrew (experimental)
  
  Notice that the `./macports-ci install` script will take care of a number of things, including:
  
+ - Uninstalling HomeBrew (only if `--remove-brew` option is used).
  - Finding which version of OSX you have so as to identify the correct MacPorts image
    when using binary installation from pkg.
  - Trying to use `port selfupdate` multiple times until it succeeds.

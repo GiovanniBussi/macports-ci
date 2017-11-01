@@ -34,6 +34,11 @@ matrix:
     env: OPT=--sync=rsync
   - osx_image: xcode8.3
     env: PRE=$HOME/opt OPT=--sync=rsync
+# test latest image remove homebrew
+  - osx_image: xcode8.3
+    env: OPT=--remove-brew
+  - osx_image: xcode8.3
+    env: PRE=$HOME/opt OPT=--remove-brew
 
 script:
 # this is required for curl to work correctly:

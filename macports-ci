@@ -12,11 +12,15 @@ case "$action" in
 
 echo "macports-ci: install"
 
+KEEP_BREW=yes
+
 for opt
 do
   case "$opt" in
   (--source) SOURCE=yes ;;
   (--binary) SOURCE=no ;;
+  (--keep-brew) KEEP_BREW=yes ;;
+  (--remove-brew) KEEP_BREW=no ;;
   (--version=*) MACPORTS_VERSION="${opt#--version=}" ;;
   (--prefix=*)  MACPORTS_PREFIX="${opt#--prefix=}" ;;
   (--sync=*)    MACPORTS_SYNC="${opt#--sync=}" ;;
@@ -24,6 +28,17 @@ do
       exit 1 ;;
   esac
 done
+
+if test "$KEEP_BREW" = no ; then
+  echo "macports-ci: removing homebrew"
+  pushd "$(mktemp -d)"
+  curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall > uninstall
+  chmod +x uninstall
+  ./uninstall --force
+  popd
+else
+  echo "macports-ci: keeping HomeBrew"
+fi
 
 echo "macports-ci: prefix=$MACPORTS_PREFIX"
 
