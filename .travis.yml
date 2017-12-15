@@ -21,7 +21,7 @@ matrix:
     env: PRE=$HOME/opt
   - osx_image: xcode9.1
     env: PRE=$HOME/opt
-   - osx_image: xcode9.2
+  - osx_image: xcode9.2
     env: PRE=$HOME/opt
 # test latest image with a different sync mode
   - osx_image: xcode8.3
