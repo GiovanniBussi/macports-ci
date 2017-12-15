@@ -49,7 +49,7 @@ The `./macports-ci install` script can be run with a few options:
  Notice that the `./macports-ci install` script will take care of a number of things, including:
  
  - Uninstalling HomeBrew (only if `--remove-brew` option is used). This is an experimental feature. Notice that
-   travis relies on some library instelled by HomeBrew so some feature might not work (I noticed a problem in saving caches)
+   travis relies on some library installed by HomeBrew so some feature might not work (I noticed a problem in saving caches)
  - Finding which version of OSX you have so as to identify the correct MacPorts image
    when using binary installation from pkg.
  - Trying to use `port selfupdate` multiple times until it succeeds.
