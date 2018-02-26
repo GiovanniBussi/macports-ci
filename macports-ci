@@ -65,6 +65,8 @@ elif test "$OSX_VERSION" == 10.11 ; then
   OSX_NAME=ElCapitan
 elif test "$OSX_VERSION" == 10.12 ; then
   OSX_NAME=Sierra
+elif test "$OSX_VERSION" == 10.13 ; then
+  OSX_NAME=HighSierra
 else
   echo "macports-ci: Unknown OSX version $OSX_VERSION"
   exit 1
