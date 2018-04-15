@@ -54,7 +54,7 @@ The `./macports-ci install` script can be run with a few options:
    when using binary installation from pkg.
  - Trying to use `port selfupdate` multiple times until it succeeds.
  
-**It will not fix your executation path**, which should be adjusted by hand with `PATH="/opt/local/bin:$PATH"`.
+**It will not fix your execution path**, which should be adjusted by hand with `PATH="/opt/local/bin:$PATH"`.
 Notice that the commands discussed below rely on `port` to be in the execution path to find its prefix,
 so it is a good idea to adjust the path
 just after `./macports-ci install` as in the example above.
