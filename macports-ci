@@ -1,6 +1,6 @@
 #! /bin/bash
 
-MACPORTS_VERSION=2.4.2
+MACPORTS_VERSION=2.4.3
 MACPORTS_PREFIX=/opt/local
 MACPORTS_SYNC=tarball
 
