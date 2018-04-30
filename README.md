@@ -26,6 +26,9 @@ Put the following commands in your `.travis.yml` file:
 If you prefer, you can directly include the `./macports-ci` file in your github repository. However, I recommend always using `curl -LO` to obtain
 the latest version. Setting the number of columns with `export COLUMNS=80` is required for MacPorts to be able to download some distfiles.
 
+**Notice that as of April 30, 2018 it is possible to source the `macports-ci` script and avoid setting the `COLUMNS` variable. See
+also notes below.**
+
 The `./macports-ci install` script can be run with a few options:
 
      --prefix=/other/prefix
@@ -58,7 +61,19 @@ The `./macports-ci install` script can be run with a few options:
 Notice that the commands discussed below rely on `port` to be in the execution path to find its prefix,
 so it is a good idea to adjust the path
 just after `./macports-ci install` as in the example above.
+
+
+Sourcing the script
+-------------------
+
+As of April 30, 2018 it is possible to source the script rather than executing it:
      
+     - curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
+     - source ./macports-ci install
+     - PATH="/opt/local/bin:$PATH"
+
+This procedure allows the script to set some environment variable. As of now, this only sets
+the `COLUMNS` variable. In the future, it might be updated in order to also set the execution `PATH`.
       
 
 Using your local Portfiles

@@ -1,5 +1,14 @@
 #! /bin/bash
 
+export COLUMNS=80
+
+(
+# start subshell
+# this allows to use the script in two ways:
+# 1. as ./macports-ci
+# 2. as source ./macports-ci
+# as of now, choice 2 only changes the env var COLUMNS.
+
 MACPORTS_VERSION=2.4.3
 MACPORTS_PREFIX=/opt/local
 MACPORTS_SYNC=tarball
@@ -242,6 +251,4 @@ echo "macports-ci: unknown action $action"
 
 esac
 
-
-
-
+)
