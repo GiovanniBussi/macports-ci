@@ -2,6 +2,9 @@
 
 export COLUMNS=80
 
+# file to be source at the end of subshell:
+export MACPORTS_CI_SOURCEME="$(mktemp)"
+
 (
 # start subshell
 # this allows to use the script in two ways:
@@ -107,6 +110,8 @@ fi
 
 # update:
 export PATH="$MACPORTS_PREFIX/bin:$PATH"
+
+echo "PATH=\"$MACPORTS_PREFIX/bin:\$PATH\""  > "$MACPORTS_CI_SOURCEME" 
 
 SOURCES="${MACPORTS_PREFIX}"/etc/macports/sources.conf
 
@@ -252,3 +257,6 @@ echo "macports-ci: unknown action $action"
 esac
 
 )
+
+# allows setting env var if necessary:
+source "$MACPORTS_CI_SOURCEME"
