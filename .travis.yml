@@ -33,17 +33,15 @@ matrix:
 
 script:
 # this is required for curl to work correctly:
-  - export COLUMNS=80
   - if test -z "$PRE" ; then PRE=/opt/local ; fi
-  - ./macports-ci install --prefix="$PRE" $OPT
-  - PATH="$PRE/bin:$PATH"
-  - if test "$PRE" = /opt/local ; then ./macports-ci ccache ; fi
+  - source macports-ci install --prefix="$PRE" $OPT
+  - if test "$PRE" = /opt/local ; then source macports-ci ccache ; fi
   - which port
 # install a small port for test:
   - sudo port -N install xdrfile
   - sudo port -N uninstall xdrfile
-  - ./macports-ci localports test_portfiles
+  - source macports-ci localports test_portfiles
 # install a small local port for test:
   - sudo port -N install xdrfile1
 # save ccache
-  - if test "$PRE" = /opt/local ; then ./macports-ci ccache --save ; fi
+  - if test "$PRE" = /opt/local ; then source macports-ci ccache --save ; fi
