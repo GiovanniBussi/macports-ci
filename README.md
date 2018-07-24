@@ -17,19 +17,15 @@ Installing MacPorts
 
 Put the following commands in your `.travis.yml` file:
 
-     - export COLUMNS=80
      - curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
-     - chmod +x ./macports-ci
-     - ./macports-ci install
-     - PATH="/opt/local/bin:$PATH"
+     - source ./macports-ci install
 
-If you prefer, you can directly include the `./macports-ci` file in your github repository. However, I recommend always using `curl -LO` to obtain
-the latest version. Setting the number of columns with `export COLUMNS=80` is required for MacPorts to be able to download some distfiles.
+If you prefer, you can directly include the `macports-ci` file in your github repository. However, I recommend always using `curl -LO` to obtain
+the latest version.
 
-**Notice that as of April 30, 2018 it is possible to source the `macports-ci` script and avoid setting the `COLUMNS` variable. See
-also notes below.**
+Notice that in the original version of this script it was necessary to also set some enviroment variables (`COLUMNS` and `PATH`). In case you execute the script in the old way (`./macports-ci`) or in case you execute it in a separate shell you might have to take care of these variables. See notes below.
 
-The `./macports-ci install` script can be run with a few options:
+The `source macports-ci install` script can be run with a few options:
 
      --prefix=/other/prefix
          Install MacPorts in a different location. Default is `/opt/local`.
@@ -49,32 +45,16 @@ The `./macports-ci install` script can be run with a few options:
      --remove-brew
          Uninstall HomeBrew (experimental)
  
- Notice that the `./macports-ci install` script will take care of a number of things, including:
+ Notice that the `source macports-ci install` script will take care of a number of things, including:
  
  - Uninstalling HomeBrew (only if `--remove-brew` option is used). This is an experimental feature. Notice that
-   travis relies on some library installed by HomeBrew so some feature might not work (I noticed a problem in saving caches)
+   travis relies on some library installed by HomeBrew so some feature might not work (I noticed a problem in saving caches).
  - Finding which version of OSX you have so as to identify the correct MacPorts image
    when using binary installation from pkg.
  - Trying to use `port selfupdate` multiple times until it succeeds.
+ - Fixing the environment setting `COLUMNS` to the appropriate value (except if you execute the script in the old way, see below).
+ - Fixing the environment prepending `/opt/local/bin` to the `PATH` (except if you execute the script in the old way, see below). This will make sure that the `port` command is in the path.
  
-**It will not fix your execution path**, which should be adjusted by hand with `PATH="/opt/local/bin:$PATH"`.
-Notice that the commands discussed below rely on `port` to be in the execution path to find its prefix,
-so it is a good idea to adjust the path
-just after `./macports-ci install` as in the example above.
-
-
-Sourcing the script
--------------------
-
-As of April 30, 2018 it is possible to source the script rather than executing it:
-     
-     - curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
-     - source ./macports-ci install
-     - PATH="/opt/local/bin:$PATH"
-
-This procedure allows the script to set some environment variable. As of now, this only sets
-the `COLUMNS` variable. In the future, it might be updated in order to also set the execution `PATH`.
-      
 
 Using your local Portfiles
 -------------------------------
@@ -83,7 +63,7 @@ In case you just need ports to install tools that are used in your project,
 you are done. If you want to also setup a 
 [local Portfile repository](https://guide.macports.org/chunked/development.local-repositories.html) to test your own Portfiles you might do the following:
 
-     - ./macports-ci localports path/to/local/port/dir
+     - source macports-ci localports path/to/local/port/dir
 
 After this command, you will be able to install packages described in your local Portfiles using commands such as `port install portname`.
 Notice that local Portfiles will take the precedence with respect to official Portfiles.
@@ -91,7 +71,7 @@ Notice that local Portfiles will take the precedence with respect to official Po
 Enabling ccache
 ---------------
 
-Ccache could be used to significantly speed up your builds, especially if you build similar source multiple times. However, notice that it will add an initial slowdown to install ccache itself. This would be more significant if you install on a non-default prefix, such that ccache itself (and its required libraries) are installed from source. This, using ccache is not recommended when building on non-default prefix.
+Ccache could be used to significantly speed up your builds, especially if you build similar sources multiple times. However, notice that it will add an initial slowdown to install ccache itself. This would be more significant if you install on a non-default prefix, such that ccache itself (and its required libraries) are installed from source. Thus, using ccache is not recommended when building on non-default prefix.
 
 In case you want to enable ccache to be available to `port install` commands, you should modify your `.travis.yml` file following these instructions. First, add the following command at the beginning of the configuration file
 
@@ -103,17 +83,39 @@ cache:
 
 This will inform Travis-ci that there is a directory to be cached. Then, add the following command after you installed MacPorts and before executing `port install` commands:
 
-    - ./macports-ci ccache
+    - source macports-ci ccache
 
 This will install ccache, retrieve the cache, and make sure ccache is used for compiling further packages. 
 Finally, add the following command after you executed the relevant `port install` commands:
 
-    - ./macports-ci ccache --save
+    - source macports-ci ccache --save
 
 This will store the ccache cache in a place where it can be seen by Travis-ci. 
 
 Notice that caching the `$HOME/.ccache` directory as explained in 
 [this page](https://docs.travis-ci.com/user/caching/) is not required nor sufficient.
+
+Executing the script in the old way
+-------------------
+
+Originally this script was designed to be executed as `./macports-ci` (rather than `source macports-ci`). Executing the script has some limitations. In particular, you should adjust the environment variables `COLUMNS` and `PATH` for the next commands to work correctly. A typical set of instructions was:
+
+````
+- export COLUMNS=80
+- curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
+- chmod +x ./macports-ci
+- ./macports-ci install
+- export PATH="/opt/local/bin:$PATH"
+````
+
+As of April 30, 2018 it is possible to source the script rather than executing it:
+     
+     - curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
+     - source ./macports-ci install
+
+As of July 24, 2018, sourcing the script set both the `COLUMNS` and the `PATH` variables to the correct values. At this point, sourcing the script rather then executing it is recommended. **Executing the script in the old way will still be supported.**
+
+Notice that if instead of running the source command directly in your `.travis.yml` file you decide to include it in some external auxiliary scripts, you might still need to set the environment variables `COLUMNS` and `PATH` in the `.travis.yml` file.
 
 
 Real life usage
@@ -137,7 +139,7 @@ Todo
 
 There are a few additional improvements that could be implemented:
 
-- Allow users to cache the `/opt/local` directory. This could be made by giving to `./macports-ci install` the path to a [cached directory](https://docs.travis-ci.com/user/caching) that could be used to restore the tree. `./macports-ci install` could then use `tar cjf $cachedir/macports.tbz2 $MACPORTS_PREFIX`. I should first check whether the `/opt/local` directory is small enough for this procedure to give some benefit.
+- Allow users to cache the `/opt/local` directory. I am afraid this is not feasible, since MacPorts also does a number of other things under the hood that are difficult to track (e.g. it adds a new user).
 - Make use of `sudo` command optional. Inside `./macports-ci`, need of `sudo` could be detected trying to touch a file in the prefix path.
 - Personalize ccache, e.g. allowing the user to specify cache size.
 
