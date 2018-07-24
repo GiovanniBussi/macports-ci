@@ -30,13 +30,24 @@ matrix:
     env: OPT=--remove-brew
   - osx_image: xcode9.4
     env: PRE=$HOME/opt OPT=--remove-brew
-
+# test executing in the original manner
+  - osx_image: xcode9.4
+    env: MACPORTS_CI_EXEC=yes
+  - osx_image: xcode9.4
+    env: PRE=$HOME/opt MACPORTS_CI_EXEC=yes
 script:
 # this is required for curl to work correctly:
   - if test -z "$PRE" ; then PRE=/opt/local ; fi
-  - source macports-ci install --prefix="$PRE" $OPT
+  - if test "$MACPORTS_CI_EXEC" = yes ; then
+      chmod +x ./macports-ci
+      ./macports-ci install --prefix="$PRE" $OPT ;
+      export COLUMNS=80
+      PATH="$PRE/bin:$PATH"
+    else
+      source macports-ci install --prefix="$PRE" $OPT ;
+    fi
+  - port installed
   - if test "$PRE" = /opt/local ; then source macports-ci ccache ; fi
-  - which port
 # install a small port for test:
   - sudo port -N install xdrfile
   - sudo port -N uninstall xdrfile
