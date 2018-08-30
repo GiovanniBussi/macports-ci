@@ -105,7 +105,7 @@ else
 # download installer:
   curl -LO $URL/$MACPORTS_PKG
 # install:
-  sudo installer -pkg $MACPORTS_PKG -target /
+  sudo installer -verbose -pkg $MACPORTS_PKG -target /
 fi
 
 # update:
