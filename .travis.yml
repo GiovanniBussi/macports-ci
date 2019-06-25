@@ -20,20 +20,20 @@ matrix:
     env: PRE=$HOME/opt
   - osx_image: xcode10.2
     env: PRE=$HOME/opt
-# test latest image with a different sync mode
-  - osx_image: xcode9.4
+# test default image with a different sync mode
+  - os: osx
     env: OPT=--sync=rsync
-  - osx_image: xcode9.4
+  - os: osx
     env: PRE=$HOME/opt OPT=--sync=rsync
-# test latest image remove homebrew
-  - osx_image: xcode9.4
+# test default image remove homebrew
+  - os: osx
     env: OPT=--remove-brew
-  - osx_image: xcode9.4
+  - os: osx
     env: PRE=$HOME/opt OPT=--remove-brew
 # test executing in the original manner
-  - osx_image: xcode9.4
+  - os: osx
     env: MACPORTS_CI_EXEC=yes
-  - osx_image: xcode9.4
+  - os: osx
     env: PRE=$HOME/opt MACPORTS_CI_EXEC=yes
 script:
 # this is required for curl to work correctly:
