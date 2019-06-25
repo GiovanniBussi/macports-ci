@@ -4,22 +4,21 @@ cache:
   directories:
   - $HOME/.macports-ci-ccache
 
+# test all supported images
+osx_image:
+  - xcode7.3
+  - xcode8.3
+  - xcode9.4
+  - xcode10.2
+
+# test both default location and $HOME/opt
+env:
+  -
+  - PRE=$HOME/opt
+
+# additional tests for less frequently used functions
 matrix:
   include:
-# test all images installing in default location
-  - osx_image: xcode7.3
-  - osx_image: xcode8.3
-  - osx_image: xcode9.4
-  - osx_image: xcode10.2
-# test all images installing in $HOME/opt
-  - osx_image: xcode7.3
-    env: PRE=$HOME/opt
-  - osx_image: xcode8.3
-    env: PRE=$HOME/opt
-  - osx_image: xcode9.4
-    env: PRE=$HOME/opt
-  - osx_image: xcode10.2
-    env: PRE=$HOME/opt
 # test default image with a different sync mode
   - os: osx
     env: OPT=--sync=rsync
@@ -35,6 +34,8 @@ matrix:
     env: MACPORTS_CI_EXEC=yes
   - os: osx
     env: PRE=$HOME/opt MACPORTS_CI_EXEC=yes
+
+# test script:
 script:
 # this is required for curl to work correctly:
   - if test -z "$PRE" ; then PRE=/opt/local ; fi
