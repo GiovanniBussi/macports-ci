@@ -89,7 +89,7 @@ echo "macports-ci: Sync mode=$MACPORTS_SYNC"
 
 pushd "$(mktemp -d)"
 
-OSX_VERSION="$(sw_vers -productVersion | sed 's/\.[^\.]*$//')"
+OSX_VERSION="$(sw_vers -productVersion | grep -o '^[0-9][0-9]*\.[0-9][0-9]*')"
 
 if test "$OSX_VERSION" == 10.10 ; then
   OSX_NAME=Yosemite
