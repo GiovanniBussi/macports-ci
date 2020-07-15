@@ -13,16 +13,10 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  with_pkg:
     runs-on: macos-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-
     - name: Install
       run: |
         source macports-ci install
@@ -33,3 +27,18 @@ jobs:
         sudo port -N uninstall xdrfile
         source macports-ci localports test_portfiles
         sudo port -N install xdrfile1
+  with_prefix:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install
+      run: |
+        source macports-ci install --prefix="$HOME/opt"
+    - name: Test
+      run: |
+        port installed
+        sudo port -N install xdrfile
+        sudo port -N uninstall xdrfile
+        source macports-ci localports test_portfiles
+        sudo port -N install xdrfile1
+
