@@ -23,7 +23,9 @@ Put the following commands in your `.travis.yml` file:
 If you prefer, you can directly include the `macports-ci` file in your github repository. However, I recommend always using `curl -LO` to obtain
 the latest version.
 
-Notice that in the original version of this script it was necessary to also set some enviroment variables (`COLUMNS` and `PATH`). In case you execute the script in the old way (`./macports-ci`) or in case you execute it in a separate shell you might have to take care of these variables. See notes below.
+Notice that in the original version of this script it was necessary to also set some enviroment variables (`COLUMNS` and `PATH`). In case you execute the script in the old way (`./macports-ci`) or in case you execute it in a separate shell you might have to take care of these variables.
+See notes below.
+Also notice that as of July 15, 2020, when used in a GitHub workflow, the script also exports the variable using [::set-env](https://docs.github.com/en/actions/reference/workflow-commands-for-github-actions#setting-an-environment-variable). This means that you can install MacPorts in one step and use it in the following steps.
 
 The `source macports-ci install` script can be run with a few options:
 
