@@ -41,4 +41,23 @@ jobs:
         sudo port -N uninstall xdrfile
         source macports-ci localports test_portfiles
         sudo port -N install xdrfile1
+  with_ccache:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/cache@v2
+      with:
+        path: ~/.macports-ci-ccache
+    - name: Install
+      run: |
+        source macports-ci install
+    - name: Test
+      run: |
+        port installed
+        source macports-ci ccache
+        sudo port -N install xdrfile
+        sudo port -N uninstall xdrfile
+        source macports-ci localports test_portfiles
+        sudo port -N install xdrfile1
+        source macports-ci ccache --save
 
