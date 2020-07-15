@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/GiovanniBussi/macports-ci.svg?branch=master)](https://travis-ci.org/GiovanniBussi/macports-ci)
+![CI](https://github.com/GiovanniBussi/macports-ci/workflows/CI/badge.svg)
 
 # Travis-CI MacPorts
 
