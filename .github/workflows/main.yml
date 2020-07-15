@@ -23,9 +23,11 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    - name: Run a multi-line script
+    - name: Install
       run: |
         source macports-ci install
+    - name: Test
+      run: |
         port installed
         sudo port -N install xdrfile
         sudo port -N uninstall xdrfile
