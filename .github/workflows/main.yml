@@ -48,6 +48,8 @@ jobs:
     - uses: actions/cache@v2
       with:
         path: ~/.macports-ci-ccache
+        key: ccache-${{ runner.os }}-${{ matrix.configuration }}-${{ github.sha }}
+        restore-keys: ccache-${{ runner.os }}-${{ matrix.configuration }}-
     - name: Install
       run: |
         source macports-ci install
@@ -60,4 +62,3 @@ jobs:
         source macports-ci localports test_portfiles
         sudo port -N install xdrfile1
         source macports-ci ccache --save
-
