@@ -142,7 +142,7 @@ export PATH="$MACPORTS_PREFIX/bin:$PATH"
 echo "PATH=\"$MACPORTS_PREFIX/bin:\$PATH\""  > "$MACPORTS_CI_SOURCEME"
 
 if [ "$GITHUB_ACTIONS" = true ] ; then
-    echo 'echo "::set-env name=PATH::$PATH"' >> "$MACPORTS_CI_SOURCEME"
+    echo 'echo "::add-path::$MACPORTS_PREFIX/bin"' >> "$MACPORTS_CI_SOURCEME"
 fi
 
 
