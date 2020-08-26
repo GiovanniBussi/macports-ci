@@ -116,6 +116,14 @@ echo "macports-ci: OSX version $OSX_VERSION $OSX_NAME"
 
 MACPORTS_PKG=MacPorts-${MACPORTS_VERSION}-${OSX_VERSION}-${OSX_NAME}.pkg
 
+# this is a workaround needed because binary installer MacPorts-2.6.3-10.12-Sierra.pkg is broken
+if [ "$MACPORTS_PKG" = "MacPorts-2.6.3-10.12-Sierra.pkg" ] ; then
+  echo "macports-ci: WARNING $MACPORTS_PKG installer is broken"
+  echo "macports-ci: reverting to source install"
+  SOURCE=yes
+fi
+
+
 URL="https://distfiles.macports.org/MacPorts"
 URL="https://github.com/macports/macports-base/releases/download/v$MACPORTS_VERSION/"
 
@@ -130,6 +138,7 @@ if test "$SOURCE" = yes ; then
   ./configure --prefix="$MACPORTS_PREFIX" --with-applications-dir="$MACPORTS_PREFIX/Applications" >/dev/null &&
     sudo make install >/dev/null
 else
+
 # download installer:
   curl -LO $URL/$MACPORTS_PKG
 # install:
