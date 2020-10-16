@@ -23,7 +23,7 @@
 export COLUMNS=80
 
 if [ "$GITHUB_ACTIONS" = true ] ; then
-    echo "::set-env name=COLUMNS::$COLUMNS"
+    echo "COLUMNS=$COLUMNS" >> "$GITHUB_ENV"
 fi
 
 # file to be source at the end of subshell:
@@ -151,7 +151,7 @@ export PATH="$MACPORTS_PREFIX/bin:$PATH"
 echo "PATH=\"$MACPORTS_PREFIX/bin:\$PATH\""  > "$MACPORTS_CI_SOURCEME"
 
 if [ "$GITHUB_ACTIONS" = true ] ; then
-    echo "echo \"::add-path::$MACPORTS_PREFIX/bin\"" >> "$MACPORTS_CI_SOURCEME"
+    echo "$MACPORTS_PREFIX/bin" >> "$GITHUB_PATH"
 fi
 
 

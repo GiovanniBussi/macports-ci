@@ -26,7 +26,7 @@ the latest version.
 
 Notice that in the original version of this script it was necessary to also set some enviroment variables (`COLUMNS` and `PATH`). In case you execute the script in the old way (`./macports-ci`) or in case you execute it in a separate shell you might have to take care of these variables.
 See notes below.
-Also notice that as of July 15, 2020, when used in a GitHub workflow, the script also exports the variable using [::set-env](https://docs.github.com/en/actions/reference/workflow-commands-for-github-actions#setting-an-environment-variable). This means that you can install MacPorts in one step and use it in the following steps.
+Also notice that as of July 15, 2020, when used in a GitHub workflow, the script also exports the variable using [::set-env](https://docs.github.com/en/actions/reference/workflow-commands-for-github-actions#setting-an-environment-variable). This means that you can install MacPorts in one step and use it in the following steps. As of October 17, this has been fixed to use [environment files](https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-commands-for-github-actions#environment-files) (see [issue 14](https://github.com/GiovanniBussi/macports-ci/issues/14)).
 
 The `source macports-ci install` script can be run with a few options:
 
