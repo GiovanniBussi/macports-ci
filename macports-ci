@@ -151,7 +151,7 @@ export PATH="$MACPORTS_PREFIX/bin:$PATH"
 echo "PATH=\"$MACPORTS_PREFIX/bin:\$PATH\""  > "$MACPORTS_CI_SOURCEME"
 
 if [ "$GITHUB_ACTIONS" = true ] ; then
-    echo "$MACPORTS_PREFIX" >> "$GITHUB_PATH"
+    echo "$MACPORTS_PREFIX/bin" >> "$GITHUB_PATH"
 fi
 
 
