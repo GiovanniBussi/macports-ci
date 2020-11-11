@@ -280,6 +280,9 @@ test -f "$HOME"/.macports-ci-ccache/ccache.conf &&
   sudo echo "max_size = 512M" > "$MACPORTS_PREFIX"/var/macports/build/.ccache/ccache.conf &&
   sudo chown -R macports:admin "$MACPORTS_PREFIX"/var/macports/build/.ccache
 
+echo "+++++++++++++++++"
+cat "$MACPORTS_PREFIX"/var/macports/build/.ccache/ccache.conf
+echo "+++++++++++++++++"
 ;;
 (save)
 
