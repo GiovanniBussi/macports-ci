@@ -27,7 +27,8 @@ if [ "$GITHUB_ACTIONS" = true ] ; then
 fi
 
 # file to be source at the end of subshell:
-export MACPORTS_CI_SOURCEME="$(mktemp)"
+MACPORTS_CI_SOURCEME="$(mktemp)"
+export MACPORTS_CI_SOURCEME
 
 (
 # start subshell
@@ -36,7 +37,7 @@ export MACPORTS_CI_SOURCEME="$(mktemp)"
 # 2. as source ./macports-ci
 # as of now, choice 2 only changes the env var COLUMNS.
 
-MACPORTS_VERSION=2.6.3
+MACPORTS_VERSION=2.6.4
 MACPORTS_PREFIX=/opt/local
 MACPORTS_SYNC=tarball
 
@@ -67,11 +68,11 @@ done
 
 if test "$KEEP_BREW" = no ; then
   echo "macports-ci: removing homebrew"
-  pushd "$(mktemp -d)"
+  pushd "$(mktemp -d)" || { echo "pushd failed"; exit 1; }
   curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall > uninstall
   chmod +x uninstall
   ./uninstall --force
-  popd
+  popd || { echo "popd failed"; exit 1; }
 else
   echo "macports-ci: keeping HomeBrew"
 fi
@@ -91,7 +92,7 @@ fi
 
 echo "macports-ci: Sync mode=$MACPORTS_SYNC"
 
-pushd "$(mktemp -d)"
+pushd "$(mktemp -d)" || { echo "pushd failed"; exit 1; }
 
 OSX_VERSION="$(sw_vers -productVersion | grep -o '^[0-9][0-9]*\.[0-9][0-9]*')"
 
@@ -133,16 +134,16 @@ if test "$SOURCE" = yes ; then
 # download source:
   curl -LO $URL/MacPorts-${MACPORTS_VERSION}.tar.bz2
   tar xjf MacPorts-${MACPORTS_VERSION}.tar.bz2
-  cd MacPorts-${MACPORTS_VERSION}
+  cd MacPorts-${MACPORTS_VERSION} || { echo "cd failed"; exit 1; }
 # install
   ./configure --prefix="$MACPORTS_PREFIX" --with-applications-dir="$MACPORTS_PREFIX/Applications" >/dev/null &&
     sudo make install >/dev/null
 else
 
 # download installer:
-  curl -LO $URL/$MACPORTS_PKG
+  curl -LO $URL/"$MACPORTS_PKG"
 # install:
-  sudo installer -verbose -pkg $MACPORTS_PKG -target /
+  sudo installer -verbose -pkg "$MACPORTS_PKG" -target /
 fi
 
 # update:
@@ -163,13 +164,13 @@ case "$MACPORTS_SYNC" in
   ;;
 (github)
   echo "macports-ci: Using github"
-   pushd "$MACPORTS_PREFIX"/var/macports/sources
+   pushd "$MACPORTS_PREFIX"/var/macports/sources || { echo "pushd failed"; exit 1; }
    sudo mkdir -p github.com/macports/macports-ports/
-   sudo chown -R $USER:admin github.com
+   sudo chown -R "$USER":admin github.com
    git clone https://github.com/macports/macports-ports.git github.com/macports/macports-ports/
-   awk '{if($NF=="[default]") print "file:///opt/local/var/macports/sources/github.com/macports/macports-ports/"; else print}' "$SOURCES" > $HOME/$$.tmp
-   sudo mv -f $HOME/$$.tmp "$SOURCES"
-   popd
+   awk '{if($NF=="[default]") print "file:///opt/local/var/macports/sources/github.com/macports/macports-ports/"; else print}' "$SOURCES" > "$HOME"/$$.tmp
+   sudo mv -f "$HOME"/$$.tmp "$SOURCES"
+   popd || { echo "popd failed"; exit 1; }
   ;;
 (tarball)
   echo "macports-ci: Using tarball"
@@ -204,8 +205,8 @@ done
 echo "macports-ci: Selfupdate successful after $i iterations"
 
 dir="$PWD"
-popd
-sudo rm -fr $dir
+popd || { echo "popd failed"; exit 1; }
+sudo rm -fr "$dir"
 
 ;;
 
@@ -229,7 +230,7 @@ w=$(which port)
 
 MACPORTS_PREFIX="${w%/bin/port}"
 
-cd "$ports"
+cd "$ports" || { echo "cd failed"; exit 1; }
 
 ports="$(pwd)"
 
@@ -277,7 +278,7 @@ test -f "$HOME"/.macports-ci-ccache/ccache.conf &&
   sudo rm -fr "$MACPORTS_PREFIX"/var/macports/build/.ccache &&
   sudo mkdir -p "$MACPORTS_PREFIX"/var/macports/build/.ccache &&
   sudo cp -a "$HOME"/.macports-ci-ccache/* "$MACPORTS_PREFIX"/var/macports/build/.ccache/ &&
-  sudo echo "max_size = 512M" > "$MACPORTS_PREFIX"/var/macports/build/.ccache/ccache.conf &&
+  echo "max_size = 512M" | sudo tee -a "$MACPORTS_PREFIX"/var/macports/build/.ccache/ccache.conf > /dev/null &&
   sudo chown -R macports:admin "$MACPORTS_PREFIX"/var/macports/build/.ccache
 
 ;;
