@@ -14,7 +14,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   with_pkg:
-    runs-on: macos-latest
+    runs-on: macos-10.15
     steps:
     - uses: actions/checkout@v2
     - name: Install
@@ -28,7 +28,7 @@ jobs:
         source macports-ci localports test_portfiles
         sudo port -N install xdrfile1
   with_prefix:
-    runs-on: macos-latest
+    runs-on: macos-10.15
     steps:
     - uses: actions/checkout@v2
     - name: Install
@@ -42,7 +42,7 @@ jobs:
         source macports-ci localports test_portfiles
         sudo port -N install xdrfile1
   with_ccache:
-    runs-on: macos-latest
+    runs-on: macos-10.15
     steps:
     - uses: actions/checkout@v2
     - uses: actions/cache@v2
@@ -52,6 +52,61 @@ jobs:
         restore-keys: ccache-${{ runner.os }}-${{ matrix.configuration }}-
     - name: Install
       run: |
+        source macports-ci install
+    - name: Test
+      run: |
+        port installed
+        source macports-ci ccache
+        sudo port -N install xdrfile
+        sudo port -N uninstall xdrfile
+        source macports-ci localports test_portfiles
+        sudo port -N install xdrfile1
+        source macports-ci ccache --save
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  with_pkg:
+    runs-on: macos-11.0
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install
+      run: |
+        sudo xcode-select -s /Applications/Xcode_12.2.app/Contents/Developer
+        source macports-ci install
+    - name: Test
+      run: |
+        port installed
+        sudo port -N install xdrfile
+        sudo port -N uninstall xdrfile
+        source macports-ci localports test_portfiles
+        sudo port -N install xdrfile1
+  with_prefix:
+    runs-on: macos-11.0
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install
+      run: |
+        sudo xcode-select -s /Applications/Xcode_12.2.app/Contents/Developer
+        source macports-ci install --prefix="$HOME/opt"
+    - name: Test
+      run: |
+        port installed
+        sudo port -N install xdrfile
+        sudo port -N uninstall xdrfile
+        source macports-ci localports test_portfiles
+        sudo port -N install xdrfile1
+  with_ccache:
+    runs-on: macos-11.0
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/cache@v2
+      with:
+        path: ~/.macports-ci-ccache
+        key: ccache-${{ runner.os }}-${{ matrix.configuration }}-${{ github.sha }}
+        restore-keys: ccache-${{ runner.os }}-${{ matrix.configuration }}-
+    - name: Install
+      run: |
+        sudo xcode-select -s /Applications/Xcode_12.2.app/Contents/Developer
         source macports-ci install
     - name: Test
       run: |

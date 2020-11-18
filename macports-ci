@@ -107,6 +107,8 @@ elif test "$OSX_VERSION" == 10.14 ; then
   OSX_NAME=Mojave
 elif test "$OSX_VERSION" == 10.15 ; then
   OSX_NAME=Catalina
+elif test "$OSX_VERSION" == 11.0 ; then
+  OSX_NAME=BigSur
 else
   echo "macports-ci: Unknown OSX version $OSX_VERSION"
   exit 1
