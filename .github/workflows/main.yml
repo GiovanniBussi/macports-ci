@@ -9,12 +9,18 @@ on:
   pull_request:
   schedule:
     - cron: '0 0 * * 0'
-    
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+
+# A workflow run is made up of several jobs that execute in parallel
 jobs:
   with_pkg:
-    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - os: macos-10.15
+          - os: macos-11.0
+    runs-on: ${{ matrix.config.os }}
     steps:
     - uses: actions/checkout@v2
     - name: Install
@@ -28,7 +34,13 @@ jobs:
         source macports-ci localports test_portfiles
         sudo port -N install xdrfile1
   with_prefix:
-    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - os: macos-10.15
+          - os: macos-11.0
+    runs-on: ${{ matrix.config.os }}
     steps:
     - uses: actions/checkout@v2
     - name: Install
@@ -42,7 +54,13 @@ jobs:
         source macports-ci localports test_portfiles
         sudo port -N install xdrfile1
   with_ccache:
-    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - os: macos-10.15
+          - os: macos-11.0
+    runs-on: ${{ matrix.config.os }}
     steps:
     - uses: actions/checkout@v2
     - uses: actions/cache@v2
