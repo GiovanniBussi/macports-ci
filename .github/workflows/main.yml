@@ -19,7 +19,8 @@ jobs:
       matrix:
         config:
           - os: macos-10.15
-          - os: macos-11.0
+          - os: macos-11
+          - os: macos-12
     runs-on: ${{ matrix.config.os }}
     steps:
     - uses: actions/checkout@v2
@@ -39,7 +40,8 @@ jobs:
       matrix:
         config:
           - os: macos-10.15
-          - os: macos-11.0
+          - os: macos-11
+          - os: macos-12
     runs-on: ${{ matrix.config.os }}
     steps:
     - uses: actions/checkout@v2
@@ -59,7 +61,8 @@ jobs:
       matrix:
         config:
           - os: macos-10.15
-          - os: macos-11.0
+          - os: macos-11
+          - os: macos-12
     runs-on: ${{ matrix.config.os }}
     steps:
     - uses: actions/checkout@v2
