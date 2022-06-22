@@ -189,27 +189,34 @@ case "$MACPORTS_SYNC" in
   ;;
 esac
 
-i=1
-# run through a while to retry upon failure
-while true
-do
-  echo "macports-ci: Trying to selfupdate (iteration $i)"
-# here I test for the presence of a known portfile
-# this check confirms that ports were installed
-# notice that port -N selfupdate && break is not sufficient as a test
-# (sometime it returns a success even though ports have not been installed)
-# for some misterious reasons, running without "-d" does not work in some case
-  sudo port -d -N selfupdate 2>&1 | grep -v DEBUG | awk '{if($1!="x")print}'
-  port info xdrfile > /dev/null && break || true
-  sleep 5
-  i=$((i+1))
-  if ((i>20)) ; then
-    echo "macports-ci: Failed after $i iterations"
-    exit 1
-  fi
-done
 
-echo "macports-ci: Selfupdate successful after $i iterations"
+if false ; then
+  i=1
+  # run through a while to retry upon failure
+  while true
+  do
+    echo "macports-ci: Trying to selfupdate (iteration $i)"
+  # here I test for the presence of a known portfile
+  # this check confirms that ports were installed
+  # notice that port -N selfupdate && break is not sufficient as a test
+  # (sometime it returns a success even though ports have not been installed)
+  # for some misterious reasons, running without "-d" does not work in some case
+    sudo port -d -N selfupdate 2>&1 | grep -v DEBUG | awk '{if($1!="x")print}'
+    port info xdrfile > /dev/null && break || true
+    sleep 5
+    i=$((i+1))
+    if ((i>20)) ; then
+      echo "macports-ci: Failed after $i iterations"
+      exit 1
+    fi
+  done
+
+  echo "macports-ci: Selfupdate successful after $i iterations"
+else
+  echo "macports-ci: Synching ports"
+  sudo port -d -N sync 2>&1 | grep -v DEBUG | awk '{if($1!="x")print}'
+  port info xdrfile > /dev/null || { echo "failed" ; exit 1 ; }
+fi
 
 dir="$PWD"
 popd
