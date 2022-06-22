@@ -36,7 +36,7 @@ export MACPORTS_CI_SOURCEME="$(mktemp)"
 # 2. as source ./macports-ci
 # as of now, choice 2 only changes the env var COLUMNS.
 
-MACPORTS_VERSION=2.7.1
+MACPORTS_VERSION=2.7.2
 MACPORTS_PREFIX=/opt/local
 MACPORTS_SYNC=tarball
 
