@@ -112,6 +112,9 @@ elif test "$(echo $OSX_VERSION | cut -c1-2)" == 11 ; then
   # MacPorts BigSur installer filename is MacPorts-${MACPORTS_VERSION}-11-BigSur.pkg
   OSX_VERSION=11
   OSX_NAME=BigSur
+elif test "$(echo $OSX_VERSION | cut -c1-2)" == 12 ; then
+  OSX_VERSION=12
+  OSX_NAME=Monterey
 else
   echo "macports-ci: Unknown OSX version $OSX_VERSION"
   exit 1
