@@ -1,14 +1,13 @@
-[![Build Status](https://travis-ci.org/GiovanniBussi/macports-ci.svg?branch=master)](https://travis-ci.org/GiovanniBussi/macports-ci)
 [![CI](https://github.com/GiovanniBussi/macports-ci/workflows/CI/badge.svg)](https://github.com/GiovanniBussi/macports-ci/actions?query=workflow%3ACI)
 
-# Travis-CI MacPorts
+# Installing MacPorts on CI systems
 
-[Travis-ci](https://travis-ci.org) is great and allows you to test your [GitHub](https://github.com) projects on OSX.
-However, OSX images on Travis-ci only come with HomeBrew installed.
+[GitHub Actions](https://docs.github.com/en/actions) is great and allows you to test your [GitHub](https://github.com) projects on OSX.
+However, OSX images on GitHub Actions only come with HomeBrew installed.
 If, like me, you want to use [MacPorts](https://www.macports.org/),
 you should install it on the fly everytime.
 For a few projects I am working on I copied around scripts installing MacPorts. I now decided to share here a generic script called `macports-ci` that could be used in multiple projects.
-The script is checked frequently on [Travis-ci](https://travis-ci.org/GiovanniBussi/macports-ci),
+The script is checked frequently on [GitHub Actions](https://github.com/GiovanniBussi/macports-ci/actions),
 so you should be able to see from the status image above whether it is working or not.
 I recommend using `curl -LO` as explained below to always use the latest version from the `master` branch.
 In case I have to test some feature, I will do it on separate branches so as to keep `master` branch stable.
@@ -16,7 +15,7 @@ In case I have to test some feature, I will do it on separate branches so as to 
 Installing MacPorts
 -------------------
 
-Put the following commands in your `.travis.yml` file:
+Put the following commands in your workflow
 
      - curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
      - source ./macports-ci install
@@ -76,27 +75,26 @@ Enabling ccache
 
 Ccache could be used to significantly speed up your builds, especially if you build similar sources multiple times. However, notice that it will add an initial slowdown to install ccache itself. This would be more significant if you install on a non-default prefix, such that ccache itself (and its required libraries) are installed from source. Thus, using ccache is not recommended when building on non-default prefix.
 
-In case you want to enable ccache to be available to `port install` commands, you should modify your `.travis.yml` file following these instructions. First, add the following command at the beginning of the configuration file
+In case you want to enable ccache to be available to `port install` commands, you should modify your workflow following these instructions. First, add the following step:
 
 ````
-cache:
-  directories:
-  - $HOME/.macports-ci-ccache
+  - uses: actions/cache@v2
+    with:
+        path: ~/.macports-ci-ccache
+        key: ccache-macports-${{ github.sha }}
+        restore-keys: ccache-macports-
 ````    
 
-This will inform Travis-ci that there is a directory to be cached. Then, add the following command after you installed MacPorts and before executing `port install` commands:
+This will inform GitHub Actions that there is a directory to be cached. Then, add the following command after you installed MacPorts and before executing `port install` commands:
 
     - source macports-ci ccache
 
-This will install ccache, retrieve the cache, and make sure ccache is used for compiling further packages. 
+This will install ccache, retrieve the cache, and make sure ccache is used for compiling further packages.
 Finally, add the following command after you executed the relevant `port install` commands:
 
     - source macports-ci ccache --save
 
-This will store the ccache cache in a place where it can be seen by Travis-ci. 
-
-Notice that caching the `$HOME/.ccache` directory as explained in 
-[this page](https://docs.travis-ci.com/user/caching/) is not required nor sufficient.
+This will store the ccache cache in a place where it can be seen by GitHub Actions. 
 
 Executing the script in the old way
 -------------------
@@ -118,13 +116,13 @@ As of April 30, 2018 it is possible to source the script rather than executing i
 
 As of July 24, 2018, sourcing the script set both the `COLUMNS` and the `PATH` variables to the correct values. At this point, sourcing the script rather then executing it is recommended. **Executing the script in the old way will still be supported.**
 
-Notice that if instead of running the source command directly in your `.travis.yml` file you decide to include it in some external auxiliary scripts, you might still need to set the environment variables `COLUMNS` and `PATH` in the `.travis.yml` file.
+Notice that if instead of running the source command directly in your workflow file you decide to include it in some external auxiliary scripts, you might still need to set the environment variables `COLUMNS` and `PATH` in the workflow file.
 
 
 Real life usage
 ---------------
 
-You can find some sample usage in the `.travis.yml` files of these repositories:
+You can find some sample usage in the workflows of these repositories:
 
 - [plumed/plumed2](http://github.com/plumed/plumed2)
 - [plumed/ports](http://github.com/plumed/ports)
