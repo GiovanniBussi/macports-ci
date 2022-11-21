@@ -23,7 +23,7 @@ jobs:
           - os: macos-12
     runs-on: ${{ matrix.config.os }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Install
       run: |
         source macports-ci install
@@ -44,7 +44,7 @@ jobs:
           - os: macos-12
     runs-on: ${{ matrix.config.os }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Install
       run: |
         source macports-ci install --prefix="$HOME/opt"
