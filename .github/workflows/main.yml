@@ -65,8 +65,8 @@ jobs:
           - os: macos-12
     runs-on: ${{ matrix.config.os }}
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/cache@v2
+    - uses: actions/checkout@v3
+    - uses: actions/cache@v3
       with:
         path: ~/.macports-ci-ccache
         key: ccache-${{ runner.os }}-${{ matrix.configuration }}-${{ github.sha }}
