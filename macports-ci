@@ -68,7 +68,7 @@ done
 if test "$KEEP_BREW" = no ; then
   echo "macports-ci: removing homebrew"
   pushd "$(mktemp -d)"
-  curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall > uninstall
+  curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh > uninstall
   chmod +x uninstall
   ./uninstall --force
   popd
