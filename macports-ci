@@ -72,6 +72,7 @@ if test "$KEEP_BREW" = no ; then
   chmod +x uninstall
   ./uninstall --force
   popd
+  hash -r  # So that /usr/bin/curl can be found below
 else
   echo "macports-ci: keeping HomeBrew"
 fi
