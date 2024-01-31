@@ -119,6 +119,9 @@ elif test "$(echo $OSX_VERSION | cut -c1-2)" == 12 ; then
 elif test "$(echo $OSX_VERSION | cut -c1-2)" == 13 ; then
   OSX_VERSION=13
   OSX_NAME=Ventura
+elif test "$(echo $OSX_VERSION | cut -c1-2)" == 14 ; then
+  OSX_VERSION=14
+  OSX_NAME=Sonoma
 else
   echo "macports-ci: Unknown OSX version $OSX_VERSION"
   exit 1
