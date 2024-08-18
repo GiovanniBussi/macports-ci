@@ -20,7 +20,7 @@ worksrcdir          xdrfile-${version}
 platforms           darwin
 
 homepage            http://www.gromacs.org/Developer_Zone/Programming_Guide/XTC_Library
-master_sites        ftp://ftp.gromacs.org/pub/contrib
+master_sites        http://ftp.gromacs.org/pub/contrib
 
 checksums           rmd160  2a58dc9eba7c587e5b4653faace7782104898ac5 \
                     sha256  e3c587c5ff24441a092fe2f3bc1dc03667bf126558f437161e779bfbcce48022
