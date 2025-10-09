@@ -1,6 +1,6 @@
 #! /bin/bash
 
-# Copyright (c) 2017-2021 Giovanni Bussi
+# Copyright (c) 2017-2025 Giovanni Bussi
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -36,9 +36,20 @@ export MACPORTS_CI_SOURCEME="$(mktemp)"
 # 2. as source ./macports-ci
 # as of now, choice 2 only changes the env var COLUMNS.
 
-MACPORTS_VERSION=2.10.2
+RELEASE_URL=https://distfiles.macports.org/MacPorts/RELEASE_URL
+# get latest MacPorts version by cutting "https://github.com/macports/macports-base/releases/tag/v"
+# prefix in HTTP response text
+MACPORTS_VERSION=$(curl $RELEASE_URL | cut -c57-)
+if [[ ! $MACPORTS_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+then
+  MACPORTS_VERSION=2.11.5
+  echo Error when fetching latest MacPorts version, falling back to $MACPORTS_VERSION.
+else
+  echo Latest MacPorts version is $MACPORTS_VERSION.
+fi
+
 MACPORTS_PREFIX=/opt/local
-MACPORTS_SYNC=tarball
+MACPORTS_SYNC=rsync
 
 action=$1
 shift
@@ -125,6 +136,9 @@ elif test "$(echo $OSX_VERSION | cut -c1-2)" == 14 ; then
 elif test "$(echo $OSX_VERSION | cut -c1-2)" == 15 ; then
   OSX_VERSION=15
   OSX_NAME=Sequoia
+elif test "$(echo $OSX_VERSION | cut -c1-2)" == 26 ; then
+  OSX_VERSION=26
+  OSX_NAME=Tahoe
 else
   echo "macports-ci: Unknown OSX version $OSX_VERSION"
   exit 1
@@ -142,6 +156,7 @@ if [ "$SOURCE" != yes ] && [ "$MACPORTS_PKG" = "MacPorts-2.6.3-10.12-Sierra.pkg"
   MACPORTS_PKG=MacPorts-${MACPORTS_VERSION}-${OSX_VERSION}-${OSX_NAME}.pkg
 fi
 
+
 URL="https://distfiles.macports.org/MacPorts"
 URL="https://github.com/macports/macports-base/releases/download/v$MACPORTS_VERSION/"
 
@@ -154,7 +169,7 @@ if test "$SOURCE" = yes ; then
   cd MacPorts-${MACPORTS_VERSION}
 # install
   ./configure --prefix="$MACPORTS_PREFIX" --with-applications-dir="$MACPORTS_PREFIX/Applications" >/dev/null &&
-    sudo make install >/dev/null
+    make >/dev/null && sudo make install >/dev/null
 else
 
 # download installer:
