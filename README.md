@@ -144,3 +144,4 @@ There are a few additional improvements that could be implemented:
 - Make use of `sudo` command optional. Inside `./macports-ci`, need of `sudo` could be detected trying to touch a file in the prefix path.
 - Personalize ccache, e.g. allowing the user to specify cache size.
 
+
