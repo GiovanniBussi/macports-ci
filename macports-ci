@@ -272,6 +272,11 @@ SOURCES="${MACPORTS_PREFIX}"/etc/macports/sources.conf
 awk -v repo="file://$ports" '{if($NF=="[default]") print repo; print}' "$SOURCES" > $$.tmp
 sudo mv -f $$.tmp "$SOURCES"
 
+# hack, needed with newer macports version
+CONF="${MACPORTS_PREFIX}"/etc/macports/macports.conf
+awk '{if(match($0,"macportsuser")) print "macportsuser root" ; else print }' "$CONF" > $$.tmp
+sudo mv -f $$.tmp "$CONF"
+
 portindex
 
 ;;
