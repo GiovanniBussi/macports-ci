@@ -70,6 +70,9 @@ you are done. If you want to also setup a
 After this command, you will be able to install packages described in your local Portfiles using commands such as `port install portname`.
 Notice that local Portfiles will take the precedence with respect to official Portfiles.
 
+**NOTE**: as of Jan 2026, using local ports require either making sure the local ports directory is accessible to any user or to
+run macports as root. Temporarily (as of Feb 23), we run as root. I will check if this can be done in a clearer way.
+
 Enabling ccache
 ---------------
 
