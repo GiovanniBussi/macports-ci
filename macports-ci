@@ -42,7 +42,7 @@ RELEASE_URL=https://distfiles.macports.org/MacPorts/RELEASE_URL
 MACPORTS_VERSION=$(curl $RELEASE_URL | cut -c57-)
 if [[ ! $MACPORTS_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
 then
-  MACPORTS_VERSION=2.11.5
+  MACPORTS_VERSION=2.12.1
   echo Error when fetching latest MacPorts version, falling back to $MACPORTS_VERSION.
 else
   echo Latest MacPorts version is $MACPORTS_VERSION.
